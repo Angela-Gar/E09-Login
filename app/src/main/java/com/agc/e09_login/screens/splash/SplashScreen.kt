@@ -1,6 +1,8 @@
 package com.agc.e09_login.screens.splash
 
 import android.view.animation.OvershootInterpolator
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.agc.e09_login.navigation.Screens
@@ -37,10 +40,10 @@ fun SplashScreen(navController: NavController) {
         scale.animateTo(
             targetValue = 0.8f,
             //Comportamiento de la animación, efecto rebote
-            animationSpec = tween(durationMillis = 2000,
-                easing = {
-                    OvershootInterpolator(8f).getInterpolation(it)
-                })
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioHighBouncy,
+                stiffness = Spring.StiffnessLow
+            )
         )
 
         delay(2000)
@@ -48,20 +51,21 @@ fun SplashScreen(navController: NavController) {
         //ir a la siguiente pantalla
         navController.navigate(Screens.LoginScreen.name)
         //si ya está logueado el usuario no necesita autenticarse de nuevo
-        if(FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
+        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()) {
             navController.navigate(Screens.LoginScreen.name)
-        } else{
-            navController.navigate(Screens.HomeScreen.name){
+        } else {
+            navController.navigate(Screens.HomeScreen.name) {
                 //al pulsaar boton atras vuelve a splash, para evitar esto y que no vuelva a salir la animacion
                 //sacamos el splash de la lista de pantallas recorridas
-                popUpTo(Screens.SplashScreen.name){
+                popUpTo(Screens.SplashScreen.name) {
                     inclusive = true
                 }
             }
         }
     }
 
-    val color = MaterialTheme.colorScheme.primary
+    val color = Color.Green
+    val color2 = Color.Black
 
     Surface(
         modifier = Modifier
@@ -77,15 +81,15 @@ fun SplashScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "IES PDV",
+                text = "SPOTIFY",
                 style = MaterialTheme.typography.titleLarge,
-                color = color.copy(alpha = 0.5f)
+                color = color2.copy(alpha = 0.5f)
             )
             Spacer(modifier = Modifier.height(15.dp))
             Text(
-                text = "2º DAM",
+                text = "LOADING",
                 style = MaterialTheme.typography.titleMedium,
-                color = color.copy(alpha = 0.5f)
+                color = color2.copy(alpha = 0.5f)
             )
         }
     }
